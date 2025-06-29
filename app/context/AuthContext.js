@@ -14,15 +14,26 @@ export function AuthProvider({ children }) {
     getCurrentUser().then((user) => {
       setUser(user);
       setLoading(false);
-    });
-
-    // Listen for auth changes
-    const { data: { subscription } } = onAuthStateChange((event, session) => {
-      setUser(session?.user || null);
+    }).catch((error) => {
+      console.error('Auth initialization error:', error);
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    // Listen for auth changes
+    try {
+      const authListener = onAuthStateChange((event, session) => {
+        setUser(session?.user || null);
+        setLoading(false);
+      });
+
+      // Check if we got a valid listener
+      if (authListener?.data?.subscription) {
+        return () => authListener.data.subscription.unsubscribe();
+      }
+    } catch (error) {
+      console.error('Auth listener setup error:', error);
+      setLoading(false);
+    }
   }, []);
 
   return (

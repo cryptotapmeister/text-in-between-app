@@ -22,13 +22,20 @@ export function useImageExport(canvasRef, textElements, canvasSize, backgroundIm
 
   // Listen for auth state changes and clear canvas on logout
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_OUT') {
-        clearCanvasOnLogout();
-      }
-    });
+    try {
+      const authListener = supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_OUT') {
+          clearCanvasOnLogout();
+        }
+      });
 
-    return () => subscription.unsubscribe();
+      // Check if we got a valid listener
+      if (authListener?.data?.subscription) {
+        return () => authListener.data.subscription.unsubscribe();
+      }
+    } catch (error) {
+      console.error('Auth listener setup error in useImageExport:', error);
+    }
   }, [clearCanvasOnLogout]);
 
   const renderCanvas = useCallback(async () => {
