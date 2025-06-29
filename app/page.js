@@ -25,7 +25,7 @@ export default function Home() {
 
   // Check if Supabase is configured
   const isSupabaseConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && 
-    process.env.NEXT_PUBLIC_SUPABASE_KEY && 
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY && 
     process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co';
 
   if (!isSupabaseConfigured) {
@@ -41,9 +41,9 @@ export default function Home() {
           <p className="text-gray-600 mb-4">
             Supabase environment variables are not properly configured. Please check your deployment settings.
           </p>
-          <div className="text-sm text-gray-500">
-            Missing: NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_KEY
-          </div>
+                     <div className="text-sm text-gray-500">
+             Missing: NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY
+           </div>
         </div>
       </div>
     );
